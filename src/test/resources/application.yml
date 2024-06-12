@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/userDatabase
+      database: my-kek-db
+  #  datasource:
+  #    driver-class-name: com.mongodb.Mongo
+  #    url: mongodb://localhost:27017/my-first-db
+  #    username: admin
+  #    password: mypass
+  application:
+    name: spec-finder
+

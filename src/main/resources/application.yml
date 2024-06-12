@@ -1,0 +1,25 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:mypass@localhost:27017/admin
+#  datasource:
+#    driver-class-name: com.mongodb.Mongo
+#    url: mongodb://localhost:27017/my-first-db
+#    username: admin
+#    password: mypass
+  application:
+    name: spec-finder
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: TRACE
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
