@@ -31,4 +31,3 @@ public class PrinterEntity {
 
     private Map<String, String> specs;
 }
-

@@ -16,5 +16,4 @@ public class PrinterResponseDto {
     private Integer printAreaZ;
 
     private Map<String, String> specs;
-
 }

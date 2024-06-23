@@ -23,3 +23,8 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+
+excel-parser:
+  index-of-header: 1
+  index-of-param: 0
+  count-left-offset: 2

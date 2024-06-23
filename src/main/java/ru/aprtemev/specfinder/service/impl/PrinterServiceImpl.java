@@ -2,28 +2,25 @@ package ru.aprtemev.specfinder.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.jexl3.internal.introspection.ArrayListWrapper;
-import org.apache.poi.hpsf.Array;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import jxl.Workbook;
 import ru.aprtemev.specfinder.dto.PrinterRequestDto;
 import ru.aprtemev.specfinder.dto.PrinterResponseDto;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
 import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.PrinterService;
+import ru.aprtemev.specfinder.utils.ExcelParser;
 
-import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +30,21 @@ public class PrinterServiceImpl implements PrinterService {
     private final PrinterRepository printerRepository;
     private final PrinterMapper printerMapper;
 
-    private static final Set<String> supportedContentTypes = Set.of(
-        "xls", "xlsx"
+    private static final Set<String> SUPPORTED_CONTENT_TYPES = Set.of("xls", "xlsx");
+    private static final Map<String, BiConsumer<PrinterEntity, String>> REQUIRED_PARAMS_CONSUMERS = Map.of(
+            "Область печати по оси X", (printerEntity, paramValue) -> printerEntity.setPrintAreaX(Integer.valueOf(paramValue)),
+            "Область печати по оси Y", (printerEntity, paramValue) -> printerEntity.setPrintAreaY(Integer.valueOf(paramValue)),
+            "Область печати по оси Z", (printerEntity, paramValue) -> printerEntity.setPrintAreaZ(Integer.valueOf(paramValue))
     );
+
+    @Value("${excel-parser.index-of-header:1}")
+    private int indexOfHeader;
+
+    @Value("${excel-parser.index-of-param:0}")
+    private int indexOfParam;
+
+    @Value("${excel-parser.count-left-offset:2}")
+    private int countLeftOffset;
 
     @Override
     public List<PrinterResponseDto> getAll() {
@@ -57,26 +66,65 @@ public class PrinterServiceImpl implements PrinterService {
     }
 
     @Override
-    public void uploadFile(MultipartFile file) {
-        if (file.isEmpty() || supportedContentTypes.contains(file.getContentType()) ) {
+    public List<PrinterEntity> uploadFile(MultipartFile file) {
+        if (file.isEmpty() || SUPPORTED_CONTENT_TYPES.contains(file.getContentType())) {
+            // TODO add error handler
             log.error("File empty or not supported fileType = [{}]", file.getContentType());
-            throw new RuntimeException("File empty or not supported fileType");
+            return Collections.emptyList();
+        }
+        Map<Integer, List<String>> excelData = ExcelParser.readExcel(file);
+        List<PrinterEntity> printerEntities = List.of(convertToEntities(excelData));
+        printerRepository.saveAll(printerEntities);
+        return printerEntities;
+    }
+
+    private PrinterEntity[] convertToEntities(Map<Integer, List<String>> data) {
+        List<String> headerLines = data.get(indexOfHeader);
+        int countModels = headerLines.size() - countLeftOffset;
+        PrinterEntity[] printerEntities = new PrinterEntity[countModels];
+
+        for (int i = 2; i < headerLines.size(); i++) {
+            PrinterEntity printerEntity = new PrinterEntity();
+            printerEntity.setModel(headerLines.get(i));
+            printerEntities[i - 2] = printerEntity;
         }
 
-        try {
-            List<Double> result = new ArrayList<>();
-            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-            XSSFSheet sheet = workbook.getSheetAt(4);
-            for(Row row : sheet) {
-                log.info("row = [{}]", row);
-                for(Cell cell : row) {
-                    result.add(cell.getNumericCellValue());
-                }
+        for (int i = 2; i < data.size(); i++) {
+            List<String> line = data.get(i);
+            if (line != null && !line.isEmpty()) {
+                resolveRequireParams(printerEntities, line);
             }
-            log.info("result = [{}]", result);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
+        return printerEntities;
+    }
+
+    private void resolveRequireParams(PrinterEntity[] printerEntities, List<String> line) {
+        String param = line.get(indexOfParam);
+        if (StringUtils.isBlank(param)) {
+            return;
+        }
+        if (REQUIRED_PARAMS_CONSUMERS.containsKey(param)) {
+            fillParams(printerEntities, line, REQUIRED_PARAMS_CONSUMERS.get(param));
+        } else {
+            fillParams(printerEntities, line, getConsumerForAddOtherParams(param));
+        }
+
+    }
+
+    private void fillParams(PrinterEntity[] printerEntities, List<String> line, BiConsumer<PrinterEntity, String> consumer) {
+        for (int i = countLeftOffset; i < line.size(); i++) {
+            String value = Optional.ofNullable(line.get(i))
+                    .orElse(StringUtils.EMPTY);
+            consumer.accept(printerEntities[i - countLeftOffset], value);
+        }
+    }
+
+    private BiConsumer<PrinterEntity, String> getConsumerForAddOtherParams(String param) {
+        return (printerEntity, paramValue) -> {
+            Map<String, String> specMap = Optional.ofNullable(printerEntity.getSpecs())
+                    .orElse(new HashMap<>());
+            specMap.put(param, paramValue);
+            printerEntity.setSpecs(specMap);
+        };
     }
 }
