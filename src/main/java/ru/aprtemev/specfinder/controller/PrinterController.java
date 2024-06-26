@@ -14,6 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.aprtemev.specfinder.dto.PrinterRequestDto;
 import ru.aprtemev.specfinder.dto.PrinterResponseDto;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
+import ru.aprtemev.specfinder.frontend.Page;
+import ru.aprtemev.specfinder.frontend.PageArray;
+import ru.aprtemev.specfinder.frontend.PagingRequest;
+import ru.aprtemev.specfinder.service.DraftPrinterService;
 import ru.aprtemev.specfinder.service.PrinterService;
 
 import java.util.List;
@@ -24,10 +28,25 @@ import java.util.List;
 public class PrinterController {
 
     private final PrinterService printerService;
+    private final DraftPrinterService draftPrinterService; // TODO remove or change
 
     @GetMapping("/all")
     public List<PrinterResponseDto> getAll() {
         return printerService.getAll();
+    }
+
+    // TODO remove when not needed
+    // TODO or maybe change....
+    @PostMapping
+    public Page<PrinterResponseDto> list(@RequestBody PagingRequest pagingRequest) {
+        return draftPrinterService.getPrinters(pagingRequest);
+    }
+
+    // TODO remove when not needed
+    // TODO or maybe change....
+    @PostMapping("/array")
+    public PageArray array(@RequestBody PagingRequest pagingRequest) {
+        return draftPrinterService.getPrintersArray(pagingRequest);
     }
 
     @PostMapping("/upload")

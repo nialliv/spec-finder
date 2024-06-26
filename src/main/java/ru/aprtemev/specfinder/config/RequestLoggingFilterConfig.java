@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
+//TODO maybe not needed
 @Configuration
 public class RequestLoggingFilterConfig {
 

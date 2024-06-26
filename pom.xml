@@ -22,6 +22,8 @@
         <lombok.version>1.18.30</lombok.version>
         <fastexcel.version>0.17.0</fastexcel.version>
         <apache-commons.version>3.14.0</apache-commons.version>
+        <bootstrap.version>4.0.0-2</bootstrap.version>
+        <webjars-locator.version>0.30</webjars-locator.version>
     </properties>
 
     <dependencies>
@@ -67,6 +69,17 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+        <!-- FrontEnd !-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${bootstrap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>${webjars-locator.version}</version>
         </dependency>
         <!-- Apache Commons !-->
         <dependency>
