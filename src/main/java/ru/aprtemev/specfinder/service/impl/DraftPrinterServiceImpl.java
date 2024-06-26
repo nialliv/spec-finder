@@ -1,8 +1,5 @@
 package ru.aprtemev.specfinder.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,12 +12,10 @@ import ru.aprtemev.specfinder.frontend.Page;
 import ru.aprtemev.specfinder.frontend.PageArray;
 import ru.aprtemev.specfinder.frontend.PagingRequest;
 import ru.aprtemev.specfinder.mapper.PrinterMapper;
-import ru.aprtemev.specfinder.mapper.PrinterMapperImpl;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.DraftPrinterService;
 import ru.aprtemev.specfinder.utils.PrinterComparators;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -34,10 +29,9 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class DraftPrinterServiceImpl implements DraftPrinterService {
 
+    private static final Comparator<PrinterResponseDto> EMPTY_COMPARATOR = (e1, e2) -> 0;
     private final PrinterRepository printerRepository;
     private final PrinterMapper mapper;
-
-    private static final Comparator<PrinterResponseDto> EMPTY_COMPARATOR = (e1, e2) -> 0;
 
     @Override
     public PageArray getPrintersArray(PagingRequest pagingRequest) {
@@ -71,16 +65,6 @@ public class DraftPrinterServiceImpl implements DraftPrinterService {
         List<PrinterEntity> entities = printerRepository.findAll();
         List<PrinterResponseDto> printers = mapper.mapToDto(entities);
         return getPage(printers, pagingRequest);
-        
-        // try {
-        //     List<PrinterResponseDto> printers = objectMapper.readValue(getClass().getClassLoader()
-        //             .getResourceAsStream("printers.json"), new TypeReference<>() {
-        //     });
-        //     return getPage(printers, pagingRequest);
-        // } catch (IOException e) {
-        //     log.error(e.getMessage(), e);
-        // }
-        // return new Page<>();
     }
 
     private Page<PrinterResponseDto> getPage(List<PrinterResponseDto> printers, PagingRequest pagingRequest) {

@@ -13,20 +13,6 @@ import java.util.Map;
 
 public final class PrinterComparators {
 
-    private PrinterComparators() {
-    }
-
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    @Getter
-    static class Key {
-
-        String name;
-
-        Direction dir;
-
-    }
-
     static Map<Key, Comparator<PrinterResponseDto>> map = new HashMap<>();
 
     static {
@@ -49,7 +35,21 @@ public final class PrinterComparators {
         //TODO add compare with spec field ?
     }
 
+    private PrinterComparators() {
+    }
+
     public static Comparator<PrinterResponseDto> getComparator(String name, Direction dir) {
         return map.get(new Key(name, dir));
+    }
+
+    @EqualsAndHashCode
+    @AllArgsConstructor
+    @Getter
+    static class Key {
+
+        String name;
+
+        Direction dir;
+
     }
 }

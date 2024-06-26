@@ -15,7 +15,8 @@ import java.util.Optional;
 @Slf4j
 public class ExcelParser {
 
-    private ExcelParser() {}
+    private ExcelParser() {
+    }
 
     public static Map<Integer, List<String>> readExcel(MultipartFile file) {
         Map<Integer, List<String>> data = new HashMap<>();

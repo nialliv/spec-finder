@@ -9,9 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.aprtemev.specfinder.dto.PrinterRequestDto;
 import ru.aprtemev.specfinder.dto.PrinterResponseDto;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
-import ru.aprtemev.specfinder.frontend.Page;
-import ru.aprtemev.specfinder.frontend.PageArray;
-import ru.aprtemev.specfinder.frontend.PagingRequest;
 import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.PrinterService;
@@ -30,9 +27,6 @@ import java.util.function.BiConsumer;
 @Slf4j
 public class PrinterServiceImpl implements PrinterService {
 
-    private final PrinterRepository printerRepository;
-    private final PrinterMapper printerMapper;
-
     // TODO remove all logic in ImportExportService
     private static final Set<String> SUPPORTED_CONTENT_TYPES = Set.of("xls", "xlsx");
     private static final Map<String, BiConsumer<PrinterEntity, String>> REQUIRED_PARAMS_CONSUMERS = Map.of(
@@ -40,7 +34,8 @@ public class PrinterServiceImpl implements PrinterService {
             "Область печати по оси Y", (printerEntity, paramValue) -> printerEntity.setPrintAreaY(Integer.valueOf(paramValue)),
             "Область печати по оси Z", (printerEntity, paramValue) -> printerEntity.setPrintAreaZ(Integer.valueOf(paramValue))
     );
-
+    private final PrinterRepository printerRepository;
+    private final PrinterMapper printerMapper;
     @Value("${excel-parser.index-of-header:1}")
     private int indexOfHeader;
 
