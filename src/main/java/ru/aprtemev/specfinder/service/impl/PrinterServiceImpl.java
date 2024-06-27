@@ -6,26 +6,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.aprtemev.specfinder.dto.PrinterRequestDto;
-import ru.aprtemev.specfinder.dto.PrinterResponseDto;
+import ru.aprtemev.specfinder.dto.Printer;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
 import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.PrinterService;
 import ru.aprtemev.specfinder.utils.ExcelParser;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PrinterServiceImpl implements PrinterService {
+
+    private final PrinterRepository printerRepository;
+    private final PrinterMapper printerMapper;
 
     // TODO remove all logic in ImportExportService
     private static final Set<String> SUPPORTED_CONTENT_TYPES = Set.of("xls", "xlsx");
@@ -34,8 +31,7 @@ public class PrinterServiceImpl implements PrinterService {
             "Область печати по оси Y", (printerEntity, paramValue) -> printerEntity.setPrintAreaY(Integer.valueOf(paramValue)),
             "Область печати по оси Z", (printerEntity, paramValue) -> printerEntity.setPrintAreaZ(Integer.valueOf(paramValue))
     );
-    private final PrinterRepository printerRepository;
-    private final PrinterMapper printerMapper;
+
     @Value("${excel-parser.index-of-header:1}")
     private int indexOfHeader;
 
@@ -46,17 +42,10 @@ public class PrinterServiceImpl implements PrinterService {
     private int countLeftOffset;
 
     @Override
-    public List<PrinterResponseDto> getAll() {
+    public List<Printer> getAll() {
         List<PrinterEntity> allPrinters = printerRepository.findAll();
         log.info("Saved printers - [{}]", allPrinters);
         return printerMapper.mapToDto(allPrinters);
-    }
-
-    @Override
-    public void insertOne(PrinterRequestDto printerRequestDto) {
-        PrinterEntity printerEntity = printerMapper.mapToEntity(printerRequestDto);
-        PrinterEntity savedEntity = printerRepository.save(printerEntity);
-        log.info("Entity was saved - [{}]", savedEntity);
     }
 
     @Override

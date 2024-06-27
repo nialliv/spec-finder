@@ -1,9 +1,8 @@
-package ru.aprtemev.specfinder.frontend;
+package ru.aprtemev.specfinder.dto.frontend;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// TODO refactor in other package
 @Data
 @NoArgsConstructor
 public class Column {

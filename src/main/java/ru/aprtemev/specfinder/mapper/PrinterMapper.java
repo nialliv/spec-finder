@@ -1,18 +1,16 @@
 package ru.aprtemev.specfinder.mapper;
 
-import org.mapstruct.Mapper;
-import ru.aprtemev.specfinder.dto.PrinterRequestDto;
-import ru.aprtemev.specfinder.dto.PrinterResponseDto;
-import ru.aprtemev.specfinder.entity.PrinterEntity;
-
 import java.util.List;
+
+import org.mapstruct.Mapper;
+
+import ru.aprtemev.specfinder.dto.Printer;
+import ru.aprtemev.specfinder.entity.PrinterEntity;
 
 @Mapper
 public interface PrinterMapper {
 
-    List<PrinterResponseDto> mapToDto(List<PrinterEntity> allPrinters);
+    List<Printer> mapToDto(List<PrinterEntity> allPrinters);
 
-    PrinterResponseDto mapToDto(PrinterEntity allPrinters);
-
-    PrinterEntity mapToEntity(PrinterRequestDto printerRequestDto);
+    Printer mapToDto(PrinterEntity allPrinters);
 }

@@ -1,4 +1,4 @@
-package ru.aprtemev.specfinder.frontend;
+package ru.aprtemev.specfinder.dto.frontend;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
