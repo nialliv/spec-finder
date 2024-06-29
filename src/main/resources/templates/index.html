@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Spec Finder</title>
 
     <!-- <link href="css/style.css" rel="stylesheet"> -->
@@ -14,102 +13,148 @@
     <link rel='stylesheet' href='https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css'>
     <!-- Font Awesome CSS -->
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
 </head>
 <!-- TODO refactor with "section", "header", "footer" -->
-<!-- TODO add import/export buttons -->
+
 <body>
 <!-- Navigation -->
- <!-- TODO refactor this navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-    <div class="container">
-        <a class="navbar-brand" href="/">Thymeleaf - Bootstrap DataTable</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
+<!-- TODO refactor this navigation -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Spec Finder</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <!-- TODO add import/export buttons -->
+                    <li class="nav-item">
+                        <input type="file" id="import-input" hidden="hidden"/>
+                        <button class="nav-link" type="button" id="import-button">Import File</button>
+                        <!--                            <a class="nav-link" href="#">Import</a>-->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Export</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</header>
 
-<div class="container">
-    <!-- TODO delete example -->
-    <div class="row">
-        <div class="col-lg-10 mt-5 mb-5">
-            <h3>Datatable using list of Objects in data parameter</h3>
-            <table id="example" class="table table-bordered table-responsive" style="width: 100%">
-                <thead>
-                <tr>
-                    <th>Model</th>
-                    <th>Area X</th>
-                    <th>Area Y</th>
-                    <th>Area Z</th>
-                </tr>
-                </thead>
-                <tfoot>
-                <tr>
-                    <th>Model</th>
-                    <th>Area X</th>
-                    <th>Area Y</th>
-                    <th>Area Z</th>
-                </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-
-    <div class="row">
+<section>
+    <div class="row" style="margin: 5px">
         <div class="col-lg-10 mt-5 mb-5">
             <h3>Datatable using list of Arrays in data parameter</h3>
-            <table id="exampleArray" class="table table-bordered table-responsive" style="width: 100%">
+            <table id="datatableArray" class="display" style="width: 100%">
                 <thead>
                 <tr>
-                    <th style="width:20%">Model</th>
-                    <th style="width:20%">Area X</th>
-                    <th style="width:20%">Area Y</th>
-                    <th style="width:20%">Area Z</th>
-                    <th style="width:20%">Spec</th>
+                    <th>Модель</th>
+                    <th>Область печати по оси X</th>
+                    <th>Область печати по оси Y</th>
+                    <th>Область печати по оси Z</th>
+                    <th>Максимальная скорость печати, см3/ч</th>
+                    <th>Скорость перемещения печатающей головки, мм/с</th>
+                    <th>Тип совместимого с 3D-принтером пластика</th>
+                    <th>Интерфейс подключения</th>
+                    <th>Калибровка платформы</th>
+                    <th>Количество сопел на печатающей головке</th>
+                    <th>Минимальная толщина слоя</th>
+                    <th>Диаметр сопла</th>
+                    <th>Максимальная температура печатающей головки</th>
+                    <th>Охлаждение зоны печати</th>
+                    <th>Наличие системы контроля наличия пластика</th>
+                    <th>Максимальная температура платформы для печати</th>
+                    <th>Тип платформы для печати</th>
+                    <th>Наличие закрытого корпуса</th>
+                    <th>Наличие системы вентиляции внутреннего пространства корпуса</th>
+                    <th>Наличие HEPA фильтра</th>
+                    <th>Наличие системы контроля платформы печати</th>
+                    <th>Тип системы контроля высоты первого слоя</th>
+                    <th>Формат файлов для печати</th>
+                    <th>Наличие функции встроенной настройки печати</th>
+                    <th>Тип управления принтером</th>
+                    <th>Наличие контроля доступа к принтеру</th>
+                    <th>Наличие функции продолжения печати после отключения питания</th>
+                    <th>Наличие функции удаленного управления принтером</th>
+                    <th>Наличие функции встроенного режима сушки</th>
+                    <th>Страна происхождения</th>
+                    <th>Цена</th>
+                    <th>Тип подачи филамента</th>
+                    <th>диаметр филамента (мм)</th>
+                    <th>Точность позиционирования по оси Х, (мкм)</th>
+                    <th>Точность позиционирования по оси Y, (мкм)</th>
+                    <th>Точность позиционирования по оси Z, (мкм)</th>
+                    <th>Материал корпуса</th>
+                    <th>Материал печатного стола</th>
+                    <th>Тип калибровки печатного стола</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
-                    <th>Model</th>
-                    <th>Area X</th>
-                    <th>Area Y</th>
-                    <th>Area Z</th>
-                    <th>Spec</th>
+                    <th>Модель</th>
+                    <th>Область печати по оси X</th>
+                    <th>Область печати по оси Y</th>
+                    <th>Область печати по оси Z</th>
+                    <th>Максимальная скорость печати, см3/ч</th>
+                    <th>Скорость перемещения печатающей головки, мм/с</th>
+                    <th>Тип совместимого с 3D-принтером пластика</th>
+                    <th>Интерфейс подключения</th>
+                    <th>Калибровка платформы</th>
+                    <th>Количество сопел на печатающей головке</th>
+                    <th>Минимальная толщина слоя</th>
+                    <th>Диаметр сопла</th>
+                    <th>Максимальная температура печатающей головки</th>
+                    <th>Охлаждение зоны печати</th>
+                    <th>Наличие системы контроля наличия пластика</th>
+                    <th>Максимальная температура платформы для печати</th>
+                    <th>Тип платформы для печати</th>
+                    <th>Наличие закрытого корпуса</th>
+                    <th>Наличие системы вентиляции внутреннего пространства корпуса</th>
+                    <th>Наличие HEPA фильтра</th>
+                    <th>Наличие системы контроля платформы печати</th>
+                    <th>Тип системы контроля высоты первого слоя</th>
+                    <th>Формат файлов для печати</th>
+                    <th>Наличие функции встроенной настройки печати</th>
+                    <th>Тип управления принтером</th>
+                    <th>Наличие контроля доступа к принтеру</th>
+                    <th>Наличие функции продолжения печати после отключения питания</th>
+                    <th>Наличие функции удаленного управления принтером</th>
+                    <th>Наличие функции встроенного режима сушки</th>
+                    <th>Страна происхождения</th>
+                    <th>Цена</th>
+                    <th>Тип подачи филамента</th>
+                    <th>диаметр филамента (мм)</th>
+                    <th>Точность позиционирования по оси Х, (мкм)</th>
+                    <th>Точность позиционирования по оси Y, (мкм)</th>
+                    <th>Точность позиционирования по оси Z, (мкм)</th>
+                    <th>Материал корпуса</th>
+                    <th>Материал печатного стола</th>
+                    <th>Тип калибровки печатного стола</th>
                 </tr>
                 </tfoot>
             </table>
         </div>
     </div>
-</div>
+</section>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{assets/datatable/datatables.js}"></script>
+<script th:src="@{/importButton.js}"></script>
 
 <!-- TODO remove in file -->
 <script>
-    $('#exampleArray').DataTable({
+    $('#datatableArray').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {

@@ -29,12 +29,12 @@ public class ExcelParser {
                     .openStream()
                     .forEach(
                             r -> {
-                                data.put(r.getRowNum(), new ArrayList<>());
+                                List<String> cellsData = data.computeIfAbsent(r.getRowNum(), k -> new ArrayList<>(r.getCellCount()));
                                 for (Cell cell : r) {
                                     String cellData = Optional.ofNullable(cell)
                                             .map(Cell::getRawValue)
                                             .orElse(null);
-                                    data.get(r.getRowNum()).add(cellData);
+                                    cellsData.add(cellData);
                                 }
                             });
 

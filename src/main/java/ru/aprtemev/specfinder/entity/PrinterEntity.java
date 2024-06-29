@@ -29,5 +29,75 @@ public class PrinterEntity {
     @Min(0)
     private Integer printAreaZ;
 
-    private Map<String, String> specs;
+    private String maxPrintSpeed;
+
+    private String printHeadMovementSpeed;
+
+    private String typeCompatiblePlastic;
+
+    private String connectInterface;
+
+    private String platformCalibration;
+
+    private String numbsOfNozzlesOnPrintHead;
+
+    private String minLayerThickness;
+
+    private String nozzleDiameter;
+
+    private String maxPrintHeadTemp;
+
+    private String coolingPrintArea;
+
+    private String availabilityOfPlasticControlSys;
+
+    private String maximumPrintTemperature;
+
+    private String printPlatformType;
+
+    private String availabilityOfClosedCase;
+
+    private String availabilityOfVentilationSystem;
+
+    private String availabilityOfHEPAFilter;
+
+    private String availabilityOfPrintPlatformControlSystem;
+
+    private String typeOfFirstLayerHeightControlSystem;
+
+    private String printFileFormat;
+
+    private String availabilityOfBuiltSettingsFunction;
+
+    private String printerControlType;
+
+    private String availabilityOfAccessControlToPrinter;
+
+    private String availabilityOfContinuePrintingAfterPowerOff;
+
+    private String availabilityOfRemoteControl;
+
+    private String availabilityOfDryingModeFunction;
+
+    private String countryOfOrigin;
+
+    private String price;
+
+    private String filamentFeedType;
+
+    private String filamentDiameter;
+
+    private String accuracyPositioningX;
+
+    private String accuracyPositioningY;
+
+    private String accuracyPositioningZ;
+
+    private String material;
+
+    private String printBedMaterial;
+
+    private String printBedCalibrationType;
+
+    private Map<String, String> otherSpecs;
 }

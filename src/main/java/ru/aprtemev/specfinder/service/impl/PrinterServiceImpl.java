@@ -12,8 +12,14 @@ import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.PrinterService;
 import ru.aprtemev.specfinder.utils.ExcelParser;
+import ru.aprtemev.specfinder.utils.PrinterFieldsContainer;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 @Service
@@ -25,12 +31,7 @@ public class PrinterServiceImpl implements PrinterService {
     private final PrinterMapper printerMapper;
 
     // TODO remove all logic in ImportExportService
-    private static final Set<String> SUPPORTED_CONTENT_TYPES = Set.of("xls", "xlsx");
-    private static final Map<String, BiConsumer<PrinterEntity, String>> REQUIRED_PARAMS_CONSUMERS = Map.of(
-            "Область печати по оси X", (printerEntity, paramValue) -> printerEntity.setPrintAreaX(Integer.valueOf(paramValue)),
-            "Область печати по оси Y", (printerEntity, paramValue) -> printerEntity.setPrintAreaY(Integer.valueOf(paramValue)),
-            "Область печати по оси Z", (printerEntity, paramValue) -> printerEntity.setPrintAreaZ(Integer.valueOf(paramValue))
-    );
+    private static final Set<String> SUPPORTED_CONTENT_TYPES = Set.of("xls", "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
     @Value("${excel-parser.index-of-header:1}")
     private int indexOfHeader;
@@ -55,7 +56,7 @@ public class PrinterServiceImpl implements PrinterService {
 
     @Override
     public List<PrinterEntity> uploadFile(MultipartFile file) {
-        if (file.isEmpty() || SUPPORTED_CONTENT_TYPES.contains(file.getContentType())) {
+        if (file.isEmpty() || !SUPPORTED_CONTENT_TYPES.contains(file.getContentType())) {
             // TODO add error handler
             log.error("File empty or not supported fileType = [{}]", file.getContentType());
             return Collections.emptyList();
@@ -70,15 +71,16 @@ public class PrinterServiceImpl implements PrinterService {
         List<String> headerLines = data.get(indexOfHeader);
         int countModels = headerLines.size() - countLeftOffset;
         PrinterEntity[] printerEntities = new PrinterEntity[countModels];
-
-        for (int i = 2; i < headerLines.size(); i++) {
+        // TODO init index pointer for printerEntities or set in for new index
+        for (int i = countLeftOffset; i < headerLines.size(); i++) {
             PrinterEntity printerEntity = new PrinterEntity();
             printerEntity.setModel(headerLines.get(i));
-            printerEntities[i - 2] = printerEntity;
+            printerEntities[i - countLeftOffset] = printerEntity;
         }
 
-        for (int i = 2; i < data.size(); i++) {
+        for (int i = indexOfHeader + 1; i < data.size(); i++) {
             List<String> line = data.get(i);
+            log.info("Parsing index - [{}], line - [{}]", i, line);
             if (line != null && !line.isEmpty()) {
                 resolveRequireParams(printerEntities, line);
             }
@@ -91,8 +93,8 @@ public class PrinterServiceImpl implements PrinterService {
         if (StringUtils.isBlank(param)) {
             return;
         }
-        if (REQUIRED_PARAMS_CONSUMERS.containsKey(param)) {
-            fillParams(printerEntities, line, REQUIRED_PARAMS_CONSUMERS.get(param));
+        if (PrinterFieldsContainer.isContainField(param)) {
+            fillParams(printerEntities, line, PrinterFieldsContainer.getConsumerByField(param));
         } else {
             fillParams(printerEntities, line, getConsumerForAddOtherParams(param));
         }
@@ -100,7 +102,13 @@ public class PrinterServiceImpl implements PrinterService {
     }
 
     private void fillParams(PrinterEntity[] printerEntities, List<String> line, BiConsumer<PrinterEntity, String> consumer) {
-        for (int i = countLeftOffset; i < line.size(); i++) {
+        if (countLeftOffset >= line.size()) {
+            for (PrinterEntity printer : printerEntities) {
+                consumer.accept(printer, StringUtils.EMPTY);
+            }
+            return;
+        }
+        for (int i = countLeftOffset; i < line.size() && i < printerEntities.length + countLeftOffset; i++) {
             String value = Optional.ofNullable(line.get(i))
                     .orElse(StringUtils.EMPTY);
             consumer.accept(printerEntities[i - countLeftOffset], value);
@@ -109,10 +117,10 @@ public class PrinterServiceImpl implements PrinterService {
 
     private BiConsumer<PrinterEntity, String> getConsumerForAddOtherParams(String param) {
         return (printerEntity, paramValue) -> {
-            Map<String, String> specMap = Optional.ofNullable(printerEntity.getSpecs())
+            Map<String, String> specMap = Optional.ofNullable(printerEntity.getOtherSpecs())
                     .orElse(new HashMap<>());
             specMap.put(param, paramValue);
-            printerEntity.setSpecs(specMap);
+            printerEntity.setOtherSpecs(specMap);
         };
     }
 }

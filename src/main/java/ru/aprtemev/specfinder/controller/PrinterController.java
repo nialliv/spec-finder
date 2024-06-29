@@ -1,10 +1,15 @@
 package ru.aprtemev.specfinder.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.aprtemev.specfinder.dto.Printer;
-import ru.aprtemev.specfinder.dto.frontend.Page;
 import ru.aprtemev.specfinder.dto.frontend.PageArray;
 import ru.aprtemev.specfinder.dto.frontend.PagingRequest;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
@@ -24,13 +29,6 @@ public class PrinterController {
     @GetMapping("/all")
     public List<Printer> getAll() {
         return printerService.getAll();
-    }
-
-    // TODO remove when not needed
-    // TODO or maybe change....
-    @PostMapping
-    public Page<Printer> list(@RequestBody PagingRequest pagingRequest) {
-        return draftPrinterService.getPrinters(pagingRequest);
     }
 
     // TODO remove when not needed
