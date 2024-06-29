@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 public enum PrinterFieldsContainer {
-    PRINT_AREA_X("Область печати по оси X", (printerEntity, paramValue) -> printerEntity.setPrintAreaX(Integer.valueOf(paramValue))),
-    PRINT_AREA_Y("Область печати по оси Y", (printerEntity, paramValue) -> printerEntity.setPrintAreaY(Integer.valueOf(paramValue))),
-    PRINT_AREA_Z("Область печати по оси Z", (printerEntity, paramValue) -> printerEntity.setPrintAreaZ(Integer.valueOf(paramValue))),
+    PRINT_AREA_X("Область печати по оси X", PrinterEntity::setPrintAreaX),
+    PRINT_AREA_Y("Область печати по оси Y", PrinterEntity::setPrintAreaY),
+    PRINT_AREA_Z("Область печати по оси Z", PrinterEntity::setPrintAreaZ),
 
     MAX_PRINT_SPEED("Максимальная скорость печати, см3/ч", PrinterEntity::setMaxPrintSpeed),
     PRINT_HEAD_MOVEMENT_SPEED("Скорость перемещения печатающей головки, мм/с", PrinterEntity::setPrintHeadMovementSpeed),

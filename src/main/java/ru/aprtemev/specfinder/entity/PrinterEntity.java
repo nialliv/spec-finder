@@ -19,15 +19,15 @@ public class PrinterEntity {
 
     @NotNull
     @Min(0)
-    private Integer printAreaX;
+    private String printAreaX;
 
     @NotNull
     @Min(0)
-    private Integer printAreaY;
+    private String printAreaY;
 
     @NotNull
     @Min(0)
-    private Integer printAreaZ;
+    private String printAreaZ;
 
     private String maxPrintSpeed;
 

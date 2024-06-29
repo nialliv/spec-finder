@@ -16,13 +16,13 @@ public class Printer {
     private String model;
 
     @JsonProperty("print_area_x")
-    private Integer printAreaX;
+    private String printAreaX;
 
     @JsonProperty("print_area_y")
-    private Integer printAreaY;
+    private String printAreaY;
 
     @JsonProperty("print_area_z")
-    private Integer printAreaZ;
+    private String printAreaZ;
 
     private String maxPrintSpeed;
 
@@ -99,9 +99,9 @@ public class Printer {
     public static List<String> toStringList(Printer printer) {
         return Arrays.asList(
                 printer.getModel(),
-                printer.getPrintAreaX().toString(),
-                printer.getPrintAreaY().toString(),
-                printer.getPrintAreaZ().toString(),
+                printer.getPrintAreaX(),
+                printer.getPrintAreaY(),
+                printer.getPrintAreaZ(),
                 printer.getMaxPrintSpeed(),
                 printer.getPrintHeadMovementSpeed(),
                 printer.getTypeCompatiblePlastic(),

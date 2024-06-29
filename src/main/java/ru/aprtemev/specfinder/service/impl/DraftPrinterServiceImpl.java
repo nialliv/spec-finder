@@ -15,6 +15,7 @@ import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.DraftPrinterService;
 import ru.aprtemev.specfinder.utils.PrinterComparators;
+import ru.aprtemev.specfinder.utils.PrinterFilterUtils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -125,22 +126,7 @@ public class DraftPrinterServiceImpl implements DraftPrinterService {
         String value = pagingRequest.getSearch()
                 .getValue();
 
-        return printer -> printer.getModel()
-                .toLowerCase()
-                .contains(value)
-                || printer.getPrintAreaX()
-                .toString()
-                .toLowerCase()
-                .contains(value)
-                || printer.getPrintAreaY()
-                .toString()
-                .toLowerCase()
-                .contains(value)
-                || printer.getPrintAreaZ()
-                .toString()
-                .toLowerCase()
-                .contains(value);
-        // TODO add filter by spec field
+        return PrinterFilterUtils.getPredicate(value);
     }
 
     private Comparator<Printer> sortPrinters(PagingRequest pagingRequest) {
