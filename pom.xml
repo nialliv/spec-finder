@@ -22,7 +22,7 @@
         <lombok.version>1.18.30</lombok.version>
         <fastexcel.version>0.17.0</fastexcel.version>
         <apache-commons.version>3.14.0</apache-commons.version>
-        <bootstrap.version>4.0.0-2</bootstrap.version>
+        <bootstrap.version>4.1.2</bootstrap.version>
         <webjars-locator.version>0.30</webjars-locator.version>
     </properties>
 
@@ -52,6 +52,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
