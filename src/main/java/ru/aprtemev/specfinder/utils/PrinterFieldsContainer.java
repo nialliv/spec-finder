@@ -16,8 +16,8 @@ public enum PrinterFieldsContainer {
     PRINT_AREA_Y("Область печати по оси Y", PrinterEntity::setPrintAreaY),
     PRINT_AREA_Z("Область печати по оси Z", PrinterEntity::setPrintAreaZ),
 
-    MAX_PRINT_SPEED("Максимальная скорость печати, см3/ч", PrinterEntity::setMaxPrintSpeed),
-    PRINT_HEAD_MOVEMENT_SPEED("Скорость перемещения печатающей головки, мм/с", PrinterEntity::setPrintHeadMovementSpeed),
+    MAX_PRINT_SPEED("Максимальная скорость печати", PrinterEntity::setMaxPrintSpeed),
+    PRINT_HEAD_MOVEMENT_SPEED("Скорость перемещения печатающей головки", PrinterEntity::setPrintHeadMovementSpeed),
     TYPE_COMPATIBLE_PLASTIC("Тип совместимого с 3D-принтером пластика", PrinterEntity::setTypeCompatiblePlastic),
     CONNECT_INTERFACE("Интерфейс подключения", PrinterEntity::setConnectInterface),
     PLATFORM_CALIBRATION("Калибровка платформы", PrinterEntity::setPlatformCalibration),
@@ -44,10 +44,10 @@ public enum PrinterFieldsContainer {
     COUNTRY_OF_ORIGIN("Страна происхождения", PrinterEntity::setCountryOfOrigin),
     PRICE("Цена", PrinterEntity::setPrice),
     FILAMENT_FEED_TYPE("Тип подачи филамента", PrinterEntity::setFilamentFeedType),
-    FILAMENT_DIAMETER("диаметр филамента (мм)", PrinterEntity::setFilamentDiameter),
-    ACCURACY_POSITIONING_X("Точность позиционирования по оси Х, (мкм)", PrinterEntity::setAccuracyPositioningX),
-    ACCURACY_POSITIONING_Y("Точность позиционирования по оси Y, (мкм)", PrinterEntity::setAccuracyPositioningY),
-    ACCURACY_POSITIONING_Z("Точность позиционирования по оси Z, (мкм)", PrinterEntity::setAccuracyPositioningZ),
+    FILAMENT_DIAMETER("диаметр филамента", PrinterEntity::setFilamentDiameter),
+    ACCURACY_POSITIONING_X("Точность позиционирования по оси Х", PrinterEntity::setAccuracyPositioningX),
+    ACCURACY_POSITIONING_Y("Точность позиционирования по оси Y", PrinterEntity::setAccuracyPositioningY),
+    ACCURACY_POSITIONING_Z("Точность позиционирования по оси Z", PrinterEntity::setAccuracyPositioningZ),
     MATERIAL("Материал корпуса", PrinterEntity::setMaterial),
     PRINT_BED_MATERIAL("Материал печатного стола", PrinterEntity::setPrintBedMaterial),
     PRINT_BED_CALIBRATION_TYPE("Тип калибровки печатного стола", PrinterEntity::setPrintBedCalibrationType);
@@ -59,11 +59,10 @@ public enum PrinterFieldsContainer {
             Arrays.stream(PrinterFieldsContainer.values())
                     .collect(Collectors.toMap(PrinterFieldsContainer::getFieldName, PrinterFieldsContainer::getFieldSetterConsumer));
 
-    public static boolean isContainField(String fieldName) {
-        return requiredParamsConsumers.containsKey(fieldName);
-    }
-
-    public static BiConsumer<PrinterEntity, String> getConsumerByField(String fieldName) {
-        return requiredParamsConsumers.get(fieldName);
+    public static PrinterFieldsContainer getContainerByFieldName(String fieldName) {
+        return Arrays.stream(PrinterFieldsContainer.values())
+                .filter(container -> fieldName.contains(container.getFieldName()))
+                .findAny()
+                .orElse(null);
     }
 }

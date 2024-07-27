@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.aprtemev.specfinder.dto.Printer;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
 import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
@@ -43,13 +42,6 @@ public class PrinterServiceImpl implements PrinterService {
     private int countLeftOffset;
 
     @Override
-    public List<Printer> getAll() {
-        List<PrinterEntity> allPrinters = printerRepository.findAll();
-        log.info("Saved printers - [{}]", allPrinters);
-        return printerMapper.mapToDto(allPrinters);
-    }
-
-    @Override
     public void deleteAll() {
         printerRepository.deleteAll();
     }
@@ -65,6 +57,28 @@ public class PrinterServiceImpl implements PrinterService {
         List<PrinterEntity> printerEntities = List.of(convertToEntities(excelData));
         printerRepository.saveAll(printerEntities);
         return printerEntities;
+    }
+
+    @Override
+    public List<PrinterEntity> getAllPrinters() {
+        return printerRepository.findAll();
+    }
+
+    @Override
+    public List<PrinterEntity> getPrintersByFilter(MultipartFile filter) {
+        // TODO parse filter file and return Filter object
+
+
+        // check of null
+
+        //repo get with  filter + return
+        return List.of();
+    }
+
+    @Override
+    public PrinterEntity getPrinter(String id) {
+        // TODO write logic
+        return null;
     }
 
     private PrinterEntity[] convertToEntities(Map<Integer, List<String>> data) {
@@ -93,8 +107,10 @@ public class PrinterServiceImpl implements PrinterService {
         if (StringUtils.isBlank(param)) {
             return;
         }
-        if (PrinterFieldsContainer.isContainField(param)) {
-            fillParams(printerEntities, line, PrinterFieldsContainer.getConsumerByField(param));
+
+        PrinterFieldsContainer container = PrinterFieldsContainer.getContainerByFieldName(param);
+        if (container != null) {
+            fillParams(printerEntities, line, container.getFieldSetterConsumer());
         } else {
             fillParams(printerEntities, line, getConsumerForAddOtherParams(param));
         }

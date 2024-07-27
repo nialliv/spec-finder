@@ -2,13 +2,8 @@ package ru.aprtemev.specfinder.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 @Data
 public class Printer {
@@ -95,52 +90,5 @@ public class Printer {
     private String printBedCalibrationType;
 
     private Map<String, String> otherSpecs;
-
-    public static List<String> toStringList(Printer printer) {
-        return Arrays.asList(
-                printer.getModel(),
-                printer.getPrintAreaX(),
-                printer.getPrintAreaY(),
-                printer.getPrintAreaZ(),
-                printer.getMaxPrintSpeed(),
-                printer.getPrintHeadMovementSpeed(),
-                printer.getTypeCompatiblePlastic(),
-                printer.getConnectInterface(),
-                printer.getPlatformCalibration(),
-                printer.getNumbsOfNozzlesOnPrintHead(),
-                printer.getMinLayerThickness(),
-                printer.getNozzleDiameter(),
-                printer.getMaxPrintHeadTemp(),
-                printer.getCoolingPrintArea(),
-                printer.getAvailabilityOfPlasticControlSys(),
-                printer.getMaximumPrintTemperature(),
-                printer.getPrintPlatformType(),
-                printer.getAvailabilityOfClosedCase(),
-                printer.getAvailabilityOfVentilationSystem(),
-                printer.getAvailabilityOfHEPAFilter(),
-                printer.getAvailabilityOfPrintPlatformControlSystem(),
-                printer.getTypeOfFirstLayerHeightControlSystem(),
-                printer.getPrintFileFormat(),
-                printer.getAvailabilityOfBuiltSettingsFunction(),
-                printer.getPrinterControlType(),
-                printer.getAvailabilityOfAccessControlToPrinter(),
-                printer.getAvailabilityOfContinuePrintingAfterPowerOff(),
-                printer.getAvailabilityOfRemoteControl(),
-                printer.getAvailabilityOfDryingModeFunction(),
-                printer.getCountryOfOrigin(),
-                printer.getPrice(),
-                printer.getFilamentFeedType(),
-                printer.getFilamentDiameter(),
-                printer.getAccuracyPositioningX(),
-                printer.getAccuracyPositioningY(),
-                printer.getAccuracyPositioningZ(),
-                printer.getMaterial(),
-                printer.getPrintBedMaterial(),
-                printer.getPrintBedCalibrationType(),
-                Optional.ofNullable(printer.getOtherSpecs())
-                        .map(Objects::toString)
-                        .orElse(StringUtils.EMPTY));
-    }
-
 
 }
