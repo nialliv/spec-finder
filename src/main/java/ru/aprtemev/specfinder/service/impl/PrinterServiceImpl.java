@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
-import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
+import ru.aprtemev.specfinder.service.DocFilterParser;
 import ru.aprtemev.specfinder.service.PrinterService;
 import ru.aprtemev.specfinder.utils.ExcelParser;
 import ru.aprtemev.specfinder.utils.PrinterFieldsContainer;
@@ -27,10 +28,12 @@ import java.util.function.BiConsumer;
 public class PrinterServiceImpl implements PrinterService {
 
     private final PrinterRepository printerRepository;
-    private final PrinterMapper printerMapper;
+    private final MongoTemplate mongoTemplate;
+    private final DocFilterParser docFilterParser;
 
     // TODO remove all logic in ImportExportService
-    private static final Set<String> SUPPORTED_CONTENT_TYPES = Set.of("xls", "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    private static final Set<String> SUPPORTED_EXCEL_TYPES = Set.of("xls", "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    private static final Set<String> SUPPORTED_DOC_TYPES = Set.of("docx", "doc", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
     @Value("${excel-parser.index-of-header:1}")
     private int indexOfHeader;
@@ -48,7 +51,7 @@ public class PrinterServiceImpl implements PrinterService {
 
     @Override
     public List<PrinterEntity> uploadFile(MultipartFile file) {
-        if (file.isEmpty() || !SUPPORTED_CONTENT_TYPES.contains(file.getContentType())) {
+        if (file.isEmpty() || !SUPPORTED_EXCEL_TYPES.contains(file.getContentType())) {
             // TODO add error handler
             log.error("File empty or not supported fileType = [{}]", file.getContentType());
             return Collections.emptyList();
@@ -65,14 +68,13 @@ public class PrinterServiceImpl implements PrinterService {
     }
 
     @Override
-    public List<PrinterEntity> getPrintersByFilter(MultipartFile filter) {
-        // TODO parse filter file and return Filter object
-
-
-        // check of null
-
-        //repo get with  filter + return
-        return List.of();
+    public List<PrinterEntity> getPrintersByFilter(MultipartFile file) {
+        if (file.isEmpty() || !SUPPORTED_DOC_TYPES.contains(file.getContentType())) {
+            log.error("File empty or not supported fileType = [{}]", file.getContentType());
+            return Collections.emptyList();
+        }
+        //todo убери все в отдельный сервис??
+        return mongoTemplate.find(docFilterParser.parseDocToQueryFilter(file), PrinterEntity.class);
     }
 
     @Override
@@ -82,7 +84,9 @@ public class PrinterServiceImpl implements PrinterService {
     }
 
     private PrinterEntity[] convertToEntities(Map<Integer, List<String>> data) {
-        List<String> headerLines = data.get(indexOfHeader);
+        List<String> headerLines = data.get(indexOfHeader).stream()
+                .filter(StringUtils::isNotBlank)
+                .toList();
         int countModels = headerLines.size() - countLeftOffset;
         PrinterEntity[] printerEntities = new PrinterEntity[countModels];
         // TODO init index pointer for printerEntities or set in for new index

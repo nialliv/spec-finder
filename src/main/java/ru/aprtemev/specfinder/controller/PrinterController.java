@@ -21,11 +21,13 @@ public class PrinterController {
 
     private final PrinterService printerService;
 
-    @GetMapping("/all")
-    public List<PrinterEntity> getAllModelsByFilter(@RequestParam(value = "filter", required = false) MultipartFile filter) {
-        if(filter == null || filter.isEmpty()){
+    @GetMapping ("/all")
+    public List<PrinterEntity> getAllModelsByFilter() {
             return printerService.getAllPrinters();
-        }
+    }
+    // todo сука поменяй все на нормальный дто с маппером
+    @PostMapping("/all")
+    public List<PrinterEntity> getAllByFilter(@RequestParam(value = "filter", required = false) MultipartFile filter) {
         return printerService.getPrintersByFilter(filter);
     }
 

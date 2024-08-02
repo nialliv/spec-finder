@@ -7,6 +7,9 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -19,41 +22,41 @@ public class PrinterEntity {
 
     @NotNull
     @Min(0)
-    private String printAreaX;
+    private Integer printAreaX;
 
     @NotNull
     @Min(0)
-    private String printAreaY;
+    private Integer printAreaY;
 
     @NotNull
     @Min(0)
-    private String printAreaZ;
+    private Integer printAreaZ;
 
-    private String maxPrintSpeed;
+    private Integer maxPrintSpeed;
 
-    private String printHeadMovementSpeed;
+    private Integer printHeadMovementSpeed;
 
-    private String typeCompatiblePlastic;
+    private List<String> typeCompatiblePlastic;
 
-    private String connectInterface;
+    private List<String> connectInterface;
 
-    private String platformCalibration;
+    private List<String> platformCalibration;
 
-    private String numbsOfNozzlesOnPrintHead;
+    private Integer numbsOfNozzlesOnPrintHead;
 
-    private String minLayerThickness;
+    private BigDecimal minLayerThickness;
 
-    private String nozzleDiameter;
+    private BigDecimal nozzleDiameter;
 
-    private String maxPrintHeadTemp;
+    private Integer maxPrintHeadTemp;
 
-    private String coolingPrintArea;
+    private List<String> coolingPrintArea;
 
     private String availabilityOfPlasticControlSys;
 
-    private String maximumPrintTemperature;
+    private Integer maximumPrintTemperature;
 
-    private String printPlatformType;
+    private List<String> printPlatformType;
 
     private String availabilityOfClosedCase;
 
@@ -81,23 +84,23 @@ public class PrinterEntity {
 
     private String countryOfOrigin;
 
-    private String price;
+    private BigInteger price;
 
     private String filamentFeedType;
 
-    private String filamentDiameter;
+    private BigDecimal filamentDiameter;
 
-    private String accuracyPositioningX;
+    private Integer accuracyPositioningX;
 
-    private String accuracyPositioningY;
+    private Integer accuracyPositioningY;
 
-    private String accuracyPositioningZ;
+    private Integer accuracyPositioningZ;
 
     private String material;
 
     private String printBedMaterial;
 
-    private String printBedCalibrationType;
+    private List<String> printBedCalibrationType;
 
     private Map<String, String> otherSpecs;
 }

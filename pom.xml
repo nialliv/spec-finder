@@ -12,7 +12,7 @@
 
     <groupId>ru.aprtemev</groupId>
     <artifactId>spec-finder</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
     <name>spec-finder</name>
     <description>Demo project for Spring Boot</description>
 
@@ -104,6 +104,12 @@
             <groupId>org.dhatim</groupId>
             <artifactId>fastexcel</artifactId>
             <version>${fastexcel.version}</version>
+        </dependency>
+        <!-- Docx -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
         </dependency>
     </dependencies>
 

@@ -9,4 +9,5 @@ rmRfButton.addEventListener("click", function () {
         }
     });
     document.getElementById("list-printers").innerHTML = "";
+    document.getElementById("title-list-printers").innerText = "А принтеров то в бд и нету =(";
 });
