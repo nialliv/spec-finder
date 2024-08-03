@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.DocFilterParser;
+import ru.aprtemev.specfinder.service.ParserService;
 import ru.aprtemev.specfinder.service.PrinterService;
-import ru.aprtemev.specfinder.utils.ExcelParser;
 import ru.aprtemev.specfinder.utils.PrinterFieldsContainer;
 
 import java.util.Collections;
@@ -30,6 +30,7 @@ public class PrinterServiceImpl implements PrinterService {
     private final PrinterRepository printerRepository;
     private final MongoTemplate mongoTemplate;
     private final DocFilterParser docFilterParser;
+    private final ParserService parserService;
 
     // TODO remove all logic in ImportExportService
     private static final Set<String> SUPPORTED_EXCEL_TYPES = Set.of("xls", "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -51,12 +52,7 @@ public class PrinterServiceImpl implements PrinterService {
 
     @Override
     public List<PrinterEntity> uploadFile(MultipartFile file) {
-        if (file.isEmpty() || !SUPPORTED_EXCEL_TYPES.contains(file.getContentType())) {
-            // TODO add error handler
-            log.error("File empty or not supported fileType = [{}]", file.getContentType());
-            return Collections.emptyList();
-        }
-        Map<Integer, List<String>> excelData = ExcelParser.readExcel(file);
+        Map<Integer, List<String>> excelData = parserService.parsePrintersFile(file);
         List<PrinterEntity> printerEntities = List.of(convertToEntities(excelData));
         printerRepository.saveAll(printerEntities);
         return printerEntities;

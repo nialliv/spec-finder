@@ -34,13 +34,10 @@ public class DocFilterParserImpl implements DocFilterParser {
         try {
             XWPFDocument document = new XWPFDocument(file.getInputStream());
             Query query = new Query();
-
             for(XWPFParagraph paragraph : document.getParagraphs()) {
-//                bsonListFilters.add(resolveParagraphs(paragraph));
                 query.addCriteria(resolveParagraphs(paragraph));
             }
             return query;
-//            return Filters.and(bsonListFilters); todo fix this
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +47,6 @@ public class DocFilterParserImpl implements DocFilterParser {
         String line = xwpfParagraph.getText();
         String param = getParam(line);
         String value = getValue(line);
-//        return resolveTypeValueAndGetBson(param, value);
         return resolveTypeValueAndGetCriteria(param, value);
     }
 

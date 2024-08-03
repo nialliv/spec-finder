@@ -25,6 +25,7 @@ public class PrinterController {
     public List<PrinterEntity> getAllModelsByFilter() {
             return printerService.getAllPrinters();
     }
+
     // todo сука поменяй все на нормальный дто с маппером
     @PostMapping("/all")
     public List<PrinterEntity> getAllByFilter(@RequestParam(value = "filter", required = false) MultipartFile filter) {
