@@ -11,7 +11,7 @@ public interface ParserService {
 
     Map<Integer, List<String>> parsePrintersFile(MultipartFile file);
 
-    List<ProductEntity> parseProductsFile(MultipartFile file);
+    Map<Integer, ProductEntity> parseProductsFile(MultipartFile file);
 
     Query parseProductFilterFile(MultipartFile file);
 

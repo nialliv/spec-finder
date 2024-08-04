@@ -21,7 +21,7 @@ importDocButton.addEventListener("click", function () {
 });
 
 importDocInput.addEventListener("change", function () {
-    const url = "/api/v1/printers/importDocument";
+    const url = "/api/v1/products/importProducts";
     let formData = new FormData();
     formData.append("file", importDocInput.files[0]);
 

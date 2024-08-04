@@ -13,7 +13,6 @@ import ru.aprtemev.specfinder.repository.ProductRepository;
 import ru.aprtemev.specfinder.service.ParserService;
 import ru.aprtemev.specfinder.service.ProductService;
 
-
 import java.util.List;
 
 @Service
@@ -34,7 +33,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<String> importProductsFromFile(MultipartFile file) {
-        List<ProductEntity> productEntities = parserService.parseProductsFile(file);
+        List<ProductEntity> productEntities = parserService.parseProductsFile(file)
+                .values()
+                .stream()
+                .toList();
+        //todo fix bug with converter. mb set Map<String, String>
         productRepository.saveAll(productEntities);
         return productEntities.stream()
                 .map(ProductEntity::getModel)
