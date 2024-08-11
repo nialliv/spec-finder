@@ -11,6 +11,6 @@ public class Spec {
 
     private Type type;
 
-    private Object value;
+    private String value;
 
 }

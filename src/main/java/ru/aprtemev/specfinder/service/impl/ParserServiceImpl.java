@@ -111,7 +111,7 @@ public class ParserServiceImpl implements ParserService {
                 return;
             }
             for (int i = countOfLeftOffset; i < row.getCellCount(); i++) {
-                Object paramValue = Optional.ofNullable(row.getCell(i))
+                String paramValue = Optional.ofNullable(row.getCell(i))
                         .map(Cell::getRawValue)
                         .orElse(null);
                 if (paramValue != null) {
@@ -130,7 +130,7 @@ public class ParserServiceImpl implements ParserService {
         }
     }
 
-    private Spec buildSpec(CellType type, Object paramValue) {
+    private Spec buildSpec(CellType type, String paramValue) {
         return switch (type) {
             case NUMBER -> new Spec(Integer.class, paramValue);
             case BOOLEAN -> new Spec(Boolean.class, paramValue);
