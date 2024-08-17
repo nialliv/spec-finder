@@ -63,7 +63,8 @@ const checkResponse = (response) => {
     }
     const errorContainer = document.createElement("div");
     errorContainer.setAttribute("class", "alert alert-danger");
-    errorContainer.innerText = "Произошла ябучая ошибка отправь мне ошибку из консоли в F12";
+    errorContainer.innerText = "Произошла ябучая ошибка: \n";
+    response.text().then(text => { errorContainer.innerText += text });
     document.getElementsByTagName("body").item(0).appendChild(errorContainer);
     throw new Error("Something went wrong");
 }
