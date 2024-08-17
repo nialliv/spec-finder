@@ -1,12 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://admin:mypass@localhost:27017/admin
-#  datasource:
-#    driver-class-name: com.mongodb.Mongo
-#    url: mongodb://localhost:27017/my-first-db
-#    username: admin
-#    password: mypass
+      uri: mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}:27017/${MONGO_DATABASE}
   application:
     name: spec-finder
   jpa:
@@ -25,6 +20,6 @@ logging:
             CommonsRequestLoggingFilter: DEBUG
 
 excel-parser:
-  index-of-header: 1
-  index-of-param: 0
-  count-left-offset: 2
+  index-of-header: ${INDEX_OF_HEADER}
+  index-of-param: ${INDEX_OF_PARAM}
+  count-left-offset: ${COUNT_LEFT_OFFSET}

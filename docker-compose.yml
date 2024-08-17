@@ -16,6 +16,7 @@ services:
     environment:
       - MONGO_USER=admin
       - MONGO_PASS=mypass
+      - MONGO_HOST=mongodb
       - MONGO_DATABASE=admin
       - INDEX_OF_HEADER=1
       - INDEX_OF_PARAM=0
