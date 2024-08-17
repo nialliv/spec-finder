@@ -1,0 +1,28 @@
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=mypass
+      - MONGO_INITDB_DATABASE=admin
+    ports:
+      - "27017:27017"
+    volumes:
+      - "./mongodb/data:/data/db"
+  spec-finder-service:
+    container_name: spec-finder-service
+    build: ./spec-finder
+    environment:
+      - MONGO_USER=admin
+      - MONGO_PASS=mypass
+      - MONGO_DATABASE=admin
+      - INDEX_OF_HEADER=1
+      - INDEX_OF_PARAM=0
+      - COUNT_LEFT_OFFSET=2
+    ports:
+      - "80:8080"
+    links:
+      - "mongodb:mongodb"
+    depends_on:
+      - mongodb

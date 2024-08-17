@@ -15,7 +15,9 @@ public enum BooleanParseContainer {
     LT("<", (param, value) -> Criteria.where(param).lt(value)),
     EQ("=", (param, value) -> Criteria.where(param).is(value)),
     GTE(">=", (param, value) -> Criteria.where(param).gte(value)),
-    LTE("<=", (param, value) -> Criteria.where(param).lte(value));
+    GTE_2("≥", (param, value) -> Criteria.where(param).gte(value)),
+    LTE("<=", (param, value) -> Criteria.where(param).lte(value)),
+    LTE_2("≤", (param, value) -> Criteria.where(param).lte(value));
 
     private final String value;
     private final BiFunction<String, Object, Criteria> biFunction;
