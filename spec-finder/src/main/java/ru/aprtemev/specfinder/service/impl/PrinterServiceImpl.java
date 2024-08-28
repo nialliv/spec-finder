@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
@@ -74,7 +75,8 @@ public class PrinterServiceImpl implements PrinterService {
             return Collections.emptyList();
         }
         //todo убери все в отдельный сервис??
-        return mongoTemplate.find(docFilterParser.parseDocToQueryFilter(file), PrinterEntity.class);
+        Query query = docFilterParser.parseDocToQueryFilter(file);
+        return mongoTemplate.find(query, PrinterEntity.class);
     }
 
     @Override

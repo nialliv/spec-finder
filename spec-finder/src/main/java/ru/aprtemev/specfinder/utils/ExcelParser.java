@@ -24,9 +24,8 @@ public class ExcelParser {
         try (InputStream fileStream = file.getInputStream();
              ReadableWorkbook workbook = new ReadableWorkbook(fileStream)) {
             workbook
-                    //todo active sheet
                     .getActiveSheet()
-                    .orElseThrow(() -> new RuntimeException("Sheet with index 2 does not exists"))
+                    .orElseThrow(() -> new RuntimeException("Active sheet does not exists"))
                     .openStream()
                     .forEach(
                             r -> {
