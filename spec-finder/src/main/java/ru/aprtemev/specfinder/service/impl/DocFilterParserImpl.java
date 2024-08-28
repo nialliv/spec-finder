@@ -101,7 +101,7 @@ public class DocFilterParserImpl implements DocFilterParser {
 
     private Object resolveTypeValue(String valueAsString) {
         if (valueAsString.matches(DOUBLE_REGEX)) {
-            return Double.parseDouble(valueAsString);
+            return valueAsString;
         }
         if (valueAsString.matches(INTEGER_REGEX)) {
             return Integer.parseInt(valueAsString);

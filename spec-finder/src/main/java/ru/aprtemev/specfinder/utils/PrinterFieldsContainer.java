@@ -79,7 +79,7 @@ public enum PrinterFieldsContainer {
             (entity, param) -> entity.setPrice(BigInteger.valueOf(getParamAsInt(param)))),
     FILAMENT_FEED_TYPE("Тип подачи филамента", "filamentFeedType",
             PrinterEntity::setFilamentFeedType),
-    FILAMENT_DIAMETER("диаметр филамента", "filamentDiameter",
+    FILAMENT_DIAMETER("Диаметр филамента", "filamentDiameter",
             (entity, param) -> entity.setFilamentDiameter(BigDecimal.valueOf(getParamAsDouble(param)))),
     ACCURACY_POSITIONING_X("Точность позиционирования по оси Х", "accuracyPositioningX",
             (entity, param) -> entity.setAccuracyPositioningX(getParamAsInt(param))),
