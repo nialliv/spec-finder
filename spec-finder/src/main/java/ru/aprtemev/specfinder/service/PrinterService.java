@@ -1,19 +1,17 @@
 package ru.aprtemev.specfinder.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.aprtemev.specfinder.entity.PrinterEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PrinterService {
 
     void deleteAll();
 
-    List<PrinterEntity> uploadFile(MultipartFile multipartFile);
+    List<Map<String, String>> uploadFile(MultipartFile multipartFile);
 
-    List<PrinterEntity> getAllPrinters();
+    List<Map<String, String>> getAllPrinters();
 
-    List<PrinterEntity> getPrintersByFilter(MultipartFile filter);
-
-    PrinterEntity getPrinter(String id);
+    List<Map<String, String>> getPrintersByFilter(MultipartFile filter);
 }

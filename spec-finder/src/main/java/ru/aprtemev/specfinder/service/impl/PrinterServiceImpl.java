@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.aprtemev.specfinder.entity.PrinterEntity;
+import ru.aprtemev.specfinder.mapper.PrinterMapper;
 import ru.aprtemev.specfinder.repository.PrinterRepository;
 import ru.aprtemev.specfinder.service.DocFilterParser;
 import ru.aprtemev.specfinder.service.PrinterService;
@@ -31,6 +32,7 @@ public class PrinterServiceImpl implements PrinterService {
     private final PrinterRepository printerRepository;
     private final MongoTemplate mongoTemplate;
     private final DocFilterParser docFilterParser;
+    private final PrinterMapper printerMapper;
 
     // TODO remove all logic in ImportExportService
     private static final Set<String> SUPPORTED_EXCEL_TYPES = Set.of("xls", "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -51,7 +53,7 @@ public class PrinterServiceImpl implements PrinterService {
     }
 
     @Override
-    public List<PrinterEntity> uploadFile(MultipartFile file) {
+    public List<Map<String, String>> uploadFile(MultipartFile file) {
         if (file.isEmpty() || !SUPPORTED_EXCEL_TYPES.contains(file.getContentType())) {
             // TODO add error handler
             log.error("File empty or not supported fileType = [{}]", file.getContentType());
@@ -60,29 +62,24 @@ public class PrinterServiceImpl implements PrinterService {
         Map<Integer, List<String>> excelData = ExcelParser.readExcel(file);
         List<PrinterEntity> printerEntities = List.of(convertToEntities(excelData));
         printerRepository.saveAll(printerEntities);
-        return printerEntities;
+        return printerMapper.mapToResponse(printerEntities);
     }
 
     @Override
-    public List<PrinterEntity> getAllPrinters() {
-        return printerRepository.findAll();
+    public List<Map<String, String>> getAllPrinters() {
+        List<PrinterEntity> all = printerRepository.findAll();
+        return printerMapper.mapToResponse(all);
     }
 
     @Override
-    public List<PrinterEntity> getPrintersByFilter(MultipartFile file) {
+    public List<Map<String, String>> getPrintersByFilter(MultipartFile file) {
         if (file.isEmpty() || !SUPPORTED_DOC_TYPES.contains(file.getContentType())) {
             log.error("File empty or not supported fileType = [{}]", file.getContentType());
             return Collections.emptyList();
         }
-        //todo убери все в отдельный сервис??
         Query query = docFilterParser.parseDocToQueryFilter(file);
-        return mongoTemplate.find(query, PrinterEntity.class);
-    }
-
-    @Override
-    public PrinterEntity getPrinter(String id) {
-        // TODO write logic
-        return null;
+        List<PrinterEntity> entities = mongoTemplate.find(query, PrinterEntity.class);
+        return printerMapper.mapToResponse(entities);
     }
 
     private PrinterEntity[] convertToEntities(Map<Integer, List<String>> data) {
@@ -91,7 +88,6 @@ public class PrinterServiceImpl implements PrinterService {
                 .toList();
         int countModels = headerLines.size() - countLeftOffset;
         PrinterEntity[] printerEntities = new PrinterEntity[countModels];
-        // TODO init index pointer for printerEntities or set in for new index
         for (int i = countLeftOffset; i < headerLines.size(); i++) {
             PrinterEntity printerEntity = new PrinterEntity();
             printerEntity.setModel(headerLines.get(i));

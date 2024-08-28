@@ -9,9 +9,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -99,9 +98,6 @@ public enum PrinterFieldsContainer {
     private final String fieldNameFromDoc;
     private final String fieldNameFromDb;
     private final BiConsumer<PrinterEntity, String> fieldSetterConsumer;
-    private static final Map<String, BiConsumer<PrinterEntity, String>> requiredParamsConsumers =
-            Arrays.stream(PrinterFieldsContainer.values())
-                    .collect(Collectors.toMap(PrinterFieldsContainer::getFieldNameFromDoc, PrinterFieldsContainer::getFieldSetterConsumer));
 
     public static PrinterFieldsContainer getContainerByFieldName(String fieldName) {
         return Arrays.stream(PrinterFieldsContainer.values())
@@ -116,6 +112,13 @@ public enum PrinterFieldsContainer {
                 .map(PrinterFieldsContainer::getFieldNameFromDb)
                 .findAny()
                 .orElse(OTHER_SPECS);
+    }
+
+    public static Optional<String> getRusFieldByEng(String engField) {
+        return Arrays.stream(values())
+                .filter(container -> container.getFieldNameFromDb().equals(engField))
+                .map(PrinterFieldsContainer::getFieldNameFromDoc)
+                .findAny();
     }
 
     private static Integer getParamAsInt(String param) {
